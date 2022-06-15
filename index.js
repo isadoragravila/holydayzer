@@ -4,7 +4,7 @@ const server = express();
 
 const holidays = [
     { date: "1/1/2022", name: "Confraternização mundial" },
-    { date: "1/3/2022", name: "Carnaval" },
+    { date: "3/1/2022", name: "Carnaval" },
     { date: "4/17/2022", name: "Páscoa" },
     { date: "4/21/2022", name: "Tiradentes" },
     { date: "5/1/2022", name: "Dia do trabalho" },
@@ -24,12 +24,25 @@ server.get("/is-today-holiday", (req, res) => {
     const hoje = new Date();
     const data = hoje.toLocaleDateString();
     const ehFeriado = holidays.find(holiday => holiday.date === data);
-    
+
     if (ehFeriado) {
         res.send(`Sim, hoje é ${ehFeriado.name}`);
     } else {
         res.send("Não, hoje não é feriado");
     }
+});
+
+server.get("/holidays/:idMes", (req, res) => {
+    const mes = req.params.idMes;
+
+    const feriadosMes = holidays.filter(holiday => holiday.date.slice(0 , mes.length + 1) === `${mes}/`);
+
+    if (feriadosMes.length !== 0) {
+        res.send(feriadosMes);
+    } else {
+        res.send("Nesse mês não há feriados");
+    }
+    
 });
 
 server.listen(4000);
